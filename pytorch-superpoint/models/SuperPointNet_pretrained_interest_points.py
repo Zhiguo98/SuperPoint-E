@@ -199,16 +199,14 @@ if __name__ == '__main__':
     model = SuperPointNet_pretrained()
     model = model.to(device)
     model.load_state_dict(torch.load("/Users/zhiguoma/Desktop/master/homework/image_understanding/final/SuperPointTrackingAdaptation/pytorch-superpoint/pretrained/superpoint_v1.pth"))
-    # model.load_state_dict(torch.load(
-    #     "/Users/zhiguoma/Desktop/master/homework/image_understanding/superPointNet_400000_checkpoint.pth.tar",
-    #     map_location=device)['model_state_dict'])
-
-    # check keras-like model summary using torchsummary
+    
     from torchsummary import summary
     summary(model, input_size=(1, 224, 224))
 
     print(model.eval())
 
+    # Processing the images and using the forward function
+    # Replace with your image path
     color_image_path = "/Users/zhiguoma/Desktop/master/homework/image_understanding/dataset/EndoJPEG/hyperK_000/00030.jpg"
     color_image = Image.open(color_image_path).convert('L')
 
@@ -244,6 +242,7 @@ if __name__ == '__main__':
     binary_mask = interest_points_mask.to(torch.uint8)
     interest_points_coords = np.argwhere(binary_mask.numpy())
 
+    # Plot the interest points on the initial image
     color = (0, 255, 0)
 
     counter = 0

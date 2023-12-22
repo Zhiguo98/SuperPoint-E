@@ -195,27 +195,27 @@ def extract_and_plot_keypoints(semi_processed, original_image, threshold):
 
 
 def prepare_descriptors(desc):
-    desc = desc.squeeze(0)  # 去除批次维度
-    desc = desc.permute(1, 2, 0)  # 调整维度为 HxWxD
-    desc = desc.reshape(-1, desc.shape[2])  # 转换为 Nx256
-    return desc.detach().cpu().numpy()  # 转换为NumPy数组
+    desc = desc.squeeze(0)
+    desc = desc.permute(1, 2, 0)
+    desc = desc.reshape(-1, desc.shape[2])
+    return desc.detach().cpu().numpy()  
 
 if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = SuperPointNet_pretrained()
     model = model.to(device)
+    # Replace with pretrained model path
     model.load_state_dict(torch.load("/Users/zhiguoma/Desktop/master/homework/image_understanding/final/SuperPointTrackingAdaptation/pytorch-superpoint/pretrained/superpoint_v1.pth"))
-    # model.load_state_dict(torch.load(
-    #     "/Users/zhiguoma/Desktop/master/homework/image_understanding/superPointNet_400000_checkpoint.pth.tar",
-    #     map_location=device)['model_state_dict'])
-
-    # check keras-like model summary using torchsummary
+    
     from torchsummary import summary
     summary(model, input_size=(1, 224, 224))
 
     print(model.eval())
 
+    # Processing the images and using the forward function
+    # Replace with your image path
     color_image_path1 = "/Users/zhiguoma/Desktop/master/homework/image_understanding/dataset/EndoJPEG/hyperK_000/00177.jpg"
+    # Replace with your image path
     color_image_path2 = "/Users/zhiguoma/Desktop/master/homework/image_understanding/dataset/EndoJPEG/hyperK_000/00178.jpg"
     color_image1 = Image.open(color_image_path1).convert('L')
     color_image2 = Image.open(color_image_path2).convert('L')
@@ -228,9 +228,7 @@ if __name__ == '__main__':
     [semi1, desc1] = model.forward(gray_image1)
     gray_image2 = transform(color_image2).unsqueeze(0)
     [semi2, desc2] = model.forward(gray_image2)
-    # print(semi.shape)
-    # print(desc.shape)
-
+    
     # Interest Point Decoder
     N = 1
     Hc = semi1.shape[2]
@@ -258,13 +256,14 @@ if __name__ == '__main__':
     desc_normalized2 = prepare_descriptors(desc_normalized2)
     print("Decoded descriptor shape:", desc_normalized1.shape)
 
+    # Plot the match Points on the initial image
     interest_points_mask1 = semi_processed1[0, 0, :, :] > 0.001
     binary_mask1 = interest_points_mask1.to(torch.uint8)
     interest_points_coords1 = np.argwhere(binary_mask1.numpy())
     keypoints1 = []
     keypoints2 = []
     for coord in interest_points_coords1:
-        # 将坐标转换为浮点数
+    
         x, y = float(coord[1]), float(coord[0])
         keypoints1.append(cv2.KeyPoint(x, y, 1))  # x, y, diameter
 
@@ -272,7 +271,7 @@ if __name__ == '__main__':
     binary_mask2 = interest_points_mask2.to(torch.uint8)
     interest_points_coords2 = np.argwhere(binary_mask2.numpy())
     for coord in interest_points_coords2:
-        # 将坐标转换为浮点数
+        
         x, y = float(coord[1]), float(coord[0])
         keypoints2.append(cv2.KeyPoint(x, y, 1))  # x, y, diameter
 
