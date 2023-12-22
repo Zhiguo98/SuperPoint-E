@@ -2,9 +2,9 @@
 
 1. Create a virtual environment and install the necessary dependencies from the project's requirements.txt file
 
-2. Run the two files "sift_feature_points.py" and "SuperPointNet_pretrained_interest_points.py" with the images in "interest_points_images" folder
+2. Within the "pytorch-superpoint" folder, running the two files "sift_feature_points.py" and "SuperPointNet_pretrained_interest_points.py" with the images in "interest_points_images" folder
 
-3. Run the two files "sift_match_points.py" and "SuperPointNet_pretrained_match_points.py" with the images in "match_points_images" folder
+3. Within the "pytorch-superpoint" folder, running the two files "sift_match_points.py" and "SuperPointNet_pretrained_match_points.py" with the images in "match_points_images" folder
 
 4. The "interest_points_images" folder and "match_points_images" folder contain images that we use for the results
 
